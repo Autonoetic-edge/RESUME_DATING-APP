@@ -63,13 +63,16 @@ export default {
 					border: 'hsl(var(--sidebar-border))',
 					ring: 'hsl(var(--sidebar-ring))'
 				},
-				// Custom Resume Dating colors
-				'neon-pink': '#FF1493',
-				'neon-purple': '#8A2BE2',
-				'vibrant-pink': '#FF69B4',
-				'electric-blue': '#00BFFF',
-				'lime-green': '#32CD32',
-				'sunset-orange': '#FF4500',
+				// Instagram-inspired colors
+				'neon-pink': '#e91e63',
+				'neon-purple': '#9c27b0',
+				'vibrant-pink': '#f06292',
+				'electric-blue': '#3f51b5',
+				'lime-green': '#8bc34a',
+				'sunset-orange': '#ff5722',
+				'instagram-purple': '#833ab4',
+				'instagram-pink': '#c13584',
+				'instagram-blue': '#405de6',
 			},
 			fontFamily: {
 				'fredoka': ['Fredoka', 'cursive'],
@@ -110,6 +113,10 @@ export default {
 				'slide-up': {
 					'0%': { transform: 'translateY(30px)', opacity: '0' },
 					'100%': { transform: 'translateY(0)', opacity: '1' }
+				},
+				'gradient': {
+					'0%, 100%': { backgroundPosition: '0% 50%' },
+					'50%': { backgroundPosition: '100% 50%' }
 				}
 			},
 			animation: {
@@ -117,7 +124,8 @@ export default {
 				'accordion-up': 'accordion-up 0.2s ease-out',
 				'float': 'float 3s ease-in-out infinite',
 				'bounce-in': 'bounce-in 0.6s ease-out',
-				'slide-up': 'slide-up 0.5s ease-out'
+				'slide-up': 'slide-up 0.5s ease-out',
+				'gradient': 'gradient 8s ease infinite'
 			}
 		}
 	},
