@@ -1,4 +1,3 @@
-
 import React, { useState } from 'react';
 import { Button } from "@/components/ui/button";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
@@ -8,7 +7,7 @@ import { Textarea } from "@/components/ui/textarea";
 import { Dialog, DialogContent, DialogHeader, DialogTitle, DialogTrigger } from "@/components/ui/dialog";
 import { Progress } from "@/components/ui/progress";
 import { Badge } from "@/components/ui/badge";
-import { Heart, Zap, Target, TrendingUp, Download, Users, BookOpen, Star, CheckCircle, FileText, BarChart3, Shield, Clock, Award, ArrowRight, Brain, Lightbulb, Rocket } from 'lucide-react';
+import { Heart, Zap, Target, TrendingUp, Download, Users, BookOpen, Star, CheckCircle, FileText, BarChart3, Shield, Clock, Award, ArrowRight, Brain, Lightbulb, Rocket, X } from 'lucide-react';
 import { useToast } from "@/hooks/use-toast";
 import SkillChart from '@/components/SkillChart';
 import ATSScoreChart from '@/components/ATSScoreChart';
@@ -132,6 +131,15 @@ ${formData.name}`,
       title: "PDF Downloaded! 📄",
       description: "Your resume analysis report has been downloaded.",
     });
+    
+    // Redirect back to landing page after download
+    setShowResults(false);
+    setResults(null);
+  };
+
+  const handleCloseResults = () => {
+    setShowResults(false);
+    setResults(null);
   };
 
   return (
@@ -508,106 +516,116 @@ ${formData.name}`,
 
       {/* Results Section */}
       {showResults && results && (
-        <section className="py-20 bg-gray-50">
-          <div className="container mx-auto px-4">
-            <Card className="bg-white rounded-2xl shadow-xl border-0 overflow-hidden">
-              <CardHeader className="text-center bg-gradient-to-r from-primary/5 to-primary/10 py-12">
-                <CardTitle className="text-3xl md:text-4xl font-fredoka font-bold text-gray-900 mb-4">
-                  Your Resume Analysis Report
-                </CardTitle>
-                <p className="text-lg text-gray-600">Generated on {results.reportDate}</p>
-              </CardHeader>
-              
-              <CardContent className="p-8 md:p-12 space-y-16">
-                {/* ATS Score */}
-                <div className="text-center">
-                  <h3 className="text-2xl md:text-3xl font-bold text-gray-900 mb-8">ATS Compatibility Score</h3>
-                  <div className="flex justify-center mb-8">
-                    <ATSScoreChart score={results.atsScore} />
+        <div className="fixed inset-0 bg-black/50 backdrop-blur-sm z-50 overflow-y-auto">
+          <div className="min-h-screen py-8 px-4">
+            <div className="max-w-6xl mx-auto">
+              <Card className="bg-white rounded-2xl shadow-2xl border-0 overflow-hidden relative">
+                {/* Close Button */}
+                <button
+                  onClick={handleCloseResults}
+                  className="absolute top-6 right-6 z-10 p-2 bg-gray-100 hover:bg-gray-200 rounded-full transition-colors"
+                >
+                  <X className="w-6 h-6 text-gray-600" />
+                </button>
+
+                <CardHeader className="text-center bg-gradient-to-r from-primary/5 to-primary/10 py-12">
+                  <CardTitle className="text-3xl md:text-4xl font-fredoka font-bold text-gray-900 mb-4">
+                    Your Resume Analysis Report
+                  </CardTitle>
+                  <p className="text-lg text-gray-600">Generated on {results.reportDate}</p>
+                </CardHeader>
+                
+                <CardContent className="p-8 md:p-12 space-y-16">
+                  {/* ATS Score */}
+                  <div className="text-center">
+                    <h3 className="text-2xl md:text-3xl font-bold text-gray-900 mb-8">ATS Compatibility Score</h3>
+                    <div className="flex justify-center mb-8">
+                      <ATSScoreChart score={results.atsScore} />
+                    </div>
+                    <Progress value={results.atsScore} className="w-full max-w-md mx-auto h-4 rounded-full" />
+                    <p className="text-gray-600 mt-4">Your resume scores {results.atsScore}% for ATS compatibility</p>
                   </div>
-                  <Progress value={results.atsScore} className="w-full max-w-md mx-auto h-4 rounded-full" />
-                  <p className="text-gray-600 mt-4">Your resume scores {results.atsScore}% for ATS compatibility</p>
-                </div>
 
-                {/* Skill Breakdown */}
-                <div>
-                  <h3 className="text-2xl md:text-3xl font-bold text-gray-900 mb-8 text-center">Skill Analysis</h3>
-                  <SkillChart data={results.skillBreakdown} />
-                </div>
-
-                {/* Missing Skills */}
-                <div>
-                  <h3 className="text-2xl md:text-3xl font-bold text-gray-900 mb-8 text-center">Skills to Develop</h3>
-                  <div className="flex flex-wrap gap-3 justify-center">
-                    {results.missingSkills.map((skill, index) => (
-                      <Badge key={index} variant="outline" className="text-base py-2 px-4 border-primary/30 text-primary rounded-full">
-                        {skill}
-                      </Badge>
-                    ))}
+                  {/* Skill Breakdown */}
+                  <div>
+                    <h3 className="text-2xl md:text-3xl font-bold text-gray-900 mb-8 text-center">Skill Analysis</h3>
+                    <SkillChart data={results.skillBreakdown} />
                   </div>
-                </div>
 
-                {/* Suggested Courses */}
-                <div>
-                  <h3 className="text-2xl md:text-3xl font-bold text-gray-900 mb-8 text-center">Recommended Courses</h3>
-                  <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
-                    {results.suggestedCourses.map((course, index) => (
-                      <Card key={index} className="border border-gray-200 hover:shadow-lg transition-shadow">
-                        <CardContent className="p-6">
-                          <div className="flex items-center gap-3">
-                            <BookOpen className="text-primary" size={24} />
-                            <div>
-                              <h4 className="font-semibold text-gray-900">{course.name}</h4>
-                              <p className="text-sm text-gray-600">{course.platform}</p>
-                            </div>
-                          </div>
-                        </CardContent>
-                      </Card>
-                    ))}
-                  </div>
-                </div>
-
-                {/* Evaluation Summary */}
-                <div>
-                  <h3 className="text-2xl md:text-3xl font-bold text-gray-900 mb-8 text-center">Professional Assessment</h3>
-                  <div className="bg-gray-50 rounded-2xl p-8 border border-gray-200">
-                    <ul className="space-y-4">
-                      {results.evaluationSummary.map((point, index) => (
-                        <li key={index} className="flex items-start gap-3">
-                          <CheckCircle className="text-green-500 mt-1 flex-shrink-0" size={20} />
-                          <span className="text-gray-700">{point}</span>
-                        </li>
+                  {/* Missing Skills */}
+                  <div>
+                    <h3 className="text-2xl md:text-3xl font-bold text-gray-900 mb-8 text-center">Skills to Develop</h3>
+                    <div className="flex flex-wrap gap-3 justify-center">
+                      {results.missingSkills.map((skill, index) => (
+                        <Badge key={index} variant="outline" className="text-base py-2 px-4 border-primary/30 text-primary rounded-full">
+                          {skill}
+                        </Badge>
                       ))}
-                    </ul>
+                    </div>
                   </div>
-                </div>
 
-                {/* Cover Letter */}
-                <div>
-                  <h3 className="text-2xl md:text-3xl font-bold text-gray-900 mb-8 text-center">Personalized Cover Letter</h3>
-                  <Textarea
-                    value={results.coverLetter}
-                    readOnly
-                    rows={12}
-                    className="w-full rounded-xl border-gray-300 bg-white text-gray-700 resize-none"
-                  />
-                </div>
+                  {/* Suggested Courses */}
+                  <div>
+                    <h3 className="text-2xl md:text-3xl font-bold text-gray-900 mb-8 text-center">Recommended Courses</h3>
+                    <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
+                      {results.suggestedCourses.map((course, index) => (
+                        <Card key={index} className="border border-gray-200 hover:shadow-lg transition-shadow">
+                          <CardContent className="p-6">
+                            <div className="flex items-center gap-3">
+                              <BookOpen className="text-primary" size={24} />
+                              <div>
+                                <h4 className="font-semibold text-gray-900">{course.name}</h4>
+                                <p className="text-sm text-gray-600">{course.platform}</p>
+                              </div>
+                            </div>
+                          </CardContent>
+                        </Card>
+                      ))}
+                    </div>
+                  </div>
 
-                {/* Download Button */}
-                <div className="text-center">
-                  <Button 
-                    onClick={handleDownloadPDF}
-                    size="lg"
-                    className="bg-primary hover:bg-primary/90 text-white font-semibold text-lg px-8 py-4 rounded-xl shadow-lg"
-                  >
-                    <Download className="mr-3" size={20} />
-                    Download Complete Report
-                  </Button>
-                </div>
-              </CardContent>
-            </Card>
+                  {/* Evaluation Summary */}
+                  <div>
+                    <h3 className="text-2xl md:text-3xl font-bold text-gray-900 mb-8 text-center">Professional Assessment</h3>
+                    <div className="bg-gray-50 rounded-2xl p-8 border border-gray-200">
+                      <ul className="space-y-4">
+                        {results.evaluationSummary.map((point, index) => (
+                          <li key={index} className="flex items-start gap-3">
+                            <CheckCircle className="text-green-500 mt-1 flex-shrink-0" size={20} />
+                            <span className="text-gray-700">{point}</span>
+                          </li>
+                        ))}
+                      </ul>
+                    </div>
+                  </div>
+
+                  {/* Cover Letter */}
+                  <div>
+                    <h3 className="text-2xl md:text-3xl font-bold text-gray-900 mb-8 text-center">Personalized Cover Letter</h3>
+                    <Textarea
+                      value={results.coverLetter}
+                      readOnly
+                      rows={12}
+                      className="w-full rounded-xl border-gray-300 bg-white text-gray-700 resize-none"
+                    />
+                  </div>
+
+                  {/* Download Button */}
+                  <div className="text-center">
+                    <Button 
+                      onClick={handleDownloadPDF}
+                      size="lg"
+                      className="bg-primary hover:bg-primary/90 text-white font-semibold text-lg px-8 py-4 rounded-xl shadow-lg"
+                    >
+                      <Download className="mr-3" size={20} />
+                      Download Complete Report
+                    </Button>
+                  </div>
+                </CardContent>
+              </Card>
+            </div>
           </div>
-        </section>
+        </div>
       )}
 
       {/* CTA Section */}
