@@ -8,7 +8,7 @@ import { Textarea } from "@/components/ui/textarea";
 import { Dialog, DialogContent, DialogHeader, DialogTitle, DialogTrigger } from "@/components/ui/dialog";
 import { Progress } from "@/components/ui/progress";
 import { Badge } from "@/components/ui/badge";
-import { Heart, Zap, Target, TrendingUp, Download, Users, BookOpen, Star } from 'lucide-react';
+import { Heart, Zap, Target, TrendingUp, Download, Users, BookOpen, Star, CheckCircle, FileText, BarChart3, Shield, Clock, Award, ArrowRight, Brain, Lightbulb, Rocket } from 'lucide-react';
 import { useToast } from "@/hooks/use-toast";
 import SkillChart from '@/components/SkillChart';
 import ATSScoreChart from '@/components/ATSScoreChart';
@@ -59,7 +59,7 @@ const Index = () => {
   const generateMockResults = (formData: FormData): Results => {
     const mockResults: Results = {
       name: formData.name,
-      atsScore: Math.floor(Math.random() * 30) + 70, // 70-100
+      atsScore: Math.floor(Math.random() * 30) + 70,
       skillBreakdown: [
         { skill: 'JavaScript', current: 85, required: 90 },
         { skill: 'React', current: 80, required: 85 },
@@ -116,7 +116,6 @@ ${formData.name}`,
       return;
     }
 
-    // Generate mock results
     const mockResults = generateMockResults(formData);
     setResults(mockResults);
     setIsModalOpen(false);
@@ -136,164 +135,412 @@ ${formData.name}`,
   };
 
   return (
-    <div className="min-h-screen relative overflow-hidden">
-      {/* Animated Background Elements */}
-      <div className="absolute inset-0 overflow-hidden pointer-events-none">
-        <div className="absolute top-20 left-10 w-20 h-20 bg-neon-pink rounded-full opacity-20 animate-float"></div>
-        <div className="absolute top-40 right-20 w-16 h-16 bg-electric-blue rounded-full opacity-30 animate-float" style={{ animationDelay: '1s' }}></div>
-        <div className="absolute bottom-20 left-1/4 w-12 h-12 bg-lime-green rounded-full opacity-25 animate-float" style={{ animationDelay: '2s' }}></div>
-        <div className="absolute top-1/3 right-1/3 w-8 h-8 bg-sunset-orange rounded-full opacity-20 animate-float" style={{ animationDelay: '0.5s' }}></div>
-      </div>
-
-      <div className="relative z-10">
-        {/* Hero Section */}
-        <div className="container mx-auto px-4 py-20 text-center">
-          <div className="animate-bounce-in">
-            <h1 className="text-6xl md:text-8xl font-fredoka font-bold text-white mb-6 leading-tight">
-              Match With Your
-              <span className="text-neon-pink"> Dream Job</span>
-              <Heart className="inline-block ml-4 text-vibrant-pink animate-pulse" size={60} />
-            </h1>
-            
-            <p className="text-xl md:text-2xl text-white/90 mb-8 max-w-3xl mx-auto font-medium">
-              Analyze your resume, improve ATS score, and get personalized cover letters—like dating but for jobs.
-            </p>
-            
-            <Dialog open={isModalOpen} onOpenChange={setIsModalOpen}>
-              <DialogTrigger asChild>
-                <Button 
-                  size="lg" 
-                  className="bg-gradient-to-r from-neon-pink to-neon-purple hover:from-vibrant-pink hover:to-neon-purple text-white font-fredoka font-semibold text-xl px-12 py-6 rounded-full shadow-2xl glow-effect card-hover transition-all duration-300"
-                >
-                  <Zap className="mr-3" size={24} />
-                  Analyze My Resume
-                </Button>
-              </DialogTrigger>
-              
-              <DialogContent className="max-w-2xl max-h-[90vh] overflow-y-auto bg-white rounded-3xl border-4 border-neon-pink">
-                <DialogHeader>
-                  <DialogTitle className="text-3xl font-fredoka font-bold text-neon-purple text-center mb-6">
-                    Let's Find Your Perfect Match! 💕
-                  </DialogTitle>
-                </DialogHeader>
-                
-                <form onSubmit={handleSubmit} className="space-y-6">
-                  <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
-                    <div>
-                      <Label htmlFor="name" className="text-lg font-semibold text-neon-purple">Name</Label>
-                      <Input
-                        id="name"
-                        name="name"
-                        value={formData.name}
-                        onChange={handleInputChange}
-                        placeholder="Your fabulous name"
-                        className="mt-2 rounded-xl border-2 border-vibrant-pink/30 focus:border-neon-pink"
-                        required
-                      />
-                    </div>
-                    
-                    <div>
-                      <Label htmlFor="email" className="text-lg font-semibold text-neon-purple">Email</Label>
-                      <Input
-                        id="email"
-                        name="email"
-                        type="email"
-                        value={formData.email}
-                        onChange={handleInputChange}
-                        placeholder="your.email@awesome.com"
-                        className="mt-2 rounded-xl border-2 border-vibrant-pink/30 focus:border-neon-pink"
-                        required
-                      />
-                    </div>
-                  </div>
-                  
-                  <div>
-                    <Label htmlFor="resume" className="text-lg font-semibold text-neon-purple">Upload Resume</Label>
-                    <Input
-                      id="resume"
-                      name="resume"
-                      type="file"
-                      accept=".pdf,.doc,.docx"
-                      onChange={handleFileChange}
-                      className="mt-2 rounded-xl border-2 border-vibrant-pink/30 focus:border-neon-pink file:bg-neon-pink file:text-white file:border-0 file:rounded-lg"
-                      required
-                    />
-                  </div>
-                  
-                  <div>
-                    <Label htmlFor="jobDescription" className="text-lg font-semibold text-neon-purple">Paste Job Description</Label>
-                    <Textarea
-                      id="jobDescription"
-                      name="jobDescription"
-                      value={formData.jobDescription}
-                      onChange={handleInputChange}
-                      placeholder="Paste the job description you're crushing on..."
-                      rows={4}
-                      className="mt-2 rounded-xl border-2 border-vibrant-pink/30 focus:border-neon-pink resize-none"
-                      required
-                    />
-                  </div>
-                  
-                  <div>
-                    <Label htmlFor="desiredJobTitle" className="text-lg font-semibold text-neon-purple">Desired Job Title</Label>
-                    <Input
-                      id="desiredJobTitle"
-                      name="desiredJobTitle"
-                      value={formData.desiredJobTitle}
-                      onChange={handleInputChange}
-                      placeholder="e.g. Senior Frontend Developer"
-                      className="mt-2 rounded-xl border-2 border-vibrant-pink/30 focus:border-neon-pink"
-                      required
-                    />
-                  </div>
-                  
-                  <Button 
-                    type="submit" 
-                    className="w-full bg-gradient-to-r from-neon-pink to-neon-purple hover:from-vibrant-pink hover:to-neon-purple text-white font-fredoka font-semibold text-xl py-4 rounded-xl shadow-lg"
-                  >
-                    <Target className="mr-3" size={20} />
-                    Get My Dream Job Match!
-                  </Button>
-                </form>
-              </DialogContent>
-            </Dialog>
+    <div className="min-h-screen bg-gradient-to-br from-slate-50 via-blue-50 to-indigo-50">
+      {/* Navigation Header */}
+      <nav className="bg-white/80 backdrop-blur-md border-b border-gray-200 sticky top-0 z-50">
+        <div className="container mx-auto px-4 py-4">
+          <div className="flex items-center justify-between">
+            <div className="flex items-center space-x-2">
+              <Heart className="text-primary" size={28} />
+              <span className="text-2xl font-fredoka font-bold text-gray-800">ResumeSync</span>
+            </div>
+            <div className="hidden md:flex items-center space-x-8">
+              <a href="#features" className="text-gray-600 hover:text-primary transition-colors">Features</a>
+              <a href="#how-it-works" className="text-gray-600 hover:text-primary transition-colors">How It Works</a>
+              <a href="#pricing" className="text-gray-600 hover:text-primary transition-colors">Pricing</a>
+              <a href="#testimonials" className="text-gray-600 hover:text-primary transition-colors">Reviews</a>
+            </div>
           </div>
         </div>
+      </nav>
 
-        {/* Results Section */}
-        {showResults && results && (
-          <div className="container mx-auto px-4 py-16 animate-slide-up">
-            <Card className="bg-white/95 backdrop-blur-sm rounded-3xl shadow-2xl border-4 border-neon-pink/30 p-8">
-              <CardHeader className="text-center">
-                <CardTitle className="text-4xl font-fredoka font-bold text-neon-purple mb-4">
-                  Hey {results.name}! Here's Your Match Report 💖
+      {/* Hero Section */}
+      <section className="relative overflow-hidden py-20 lg:py-32">
+        <div className="container mx-auto px-4">
+          <div className="max-w-4xl mx-auto text-center">
+            <div className="animate-fade-in">
+              <h1 className="text-5xl md:text-7xl font-fredoka font-bold text-gray-900 mb-6 leading-tight">
+                Find Your Perfect
+                <span className="text-primary"> Career Match</span>
+              </h1>
+              
+              <p className="text-xl md:text-2xl text-gray-600 mb-8 max-w-3xl mx-auto leading-relaxed">
+                Advanced AI-powered resume analysis and optimization platform. Get detailed ATS scoring, personalized improvement suggestions, and custom cover letters.
+              </p>
+              
+              <div className="flex flex-col sm:flex-row gap-4 justify-center items-center mb-12">
+                <Dialog open={isModalOpen} onOpenChange={setIsModalOpen}>
+                  <DialogTrigger asChild>
+                    <Button 
+                      size="lg" 
+                      className="bg-primary hover:bg-primary/90 text-white font-semibold text-lg px-8 py-4 rounded-xl shadow-lg hover:shadow-xl transition-all duration-300"
+                    >
+                      <Zap className="mr-2" size={20} />
+                      Analyze My Resume
+                    </Button>
+                  </DialogTrigger>
+                  
+                  <DialogContent className="max-w-2xl max-h-[90vh] overflow-y-auto bg-white rounded-2xl">
+                    <DialogHeader>
+                      <DialogTitle className="text-2xl font-fredoka font-bold text-gray-800 text-center mb-6">
+                        Upload Your Resume for Analysis
+                      </DialogTitle>
+                    </DialogHeader>
+                    
+                    <form onSubmit={handleSubmit} className="space-y-6">
+                      <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
+                        <div>
+                          <Label htmlFor="name" className="text-sm font-semibold text-gray-700">Full Name</Label>
+                          <Input
+                            id="name"
+                            name="name"
+                            value={formData.name}
+                            onChange={handleInputChange}
+                            placeholder="Enter your name"
+                            className="mt-1 border-gray-300 focus:border-primary"
+                            required
+                          />
+                        </div>
+                        
+                        <div>
+                          <Label htmlFor="email" className="text-sm font-semibold text-gray-700">Email Address</Label>
+                          <Input
+                            id="email"
+                            name="email"
+                            type="email"
+                            value={formData.email}
+                            onChange={handleInputChange}
+                            placeholder="your.email@example.com"
+                            className="mt-1 border-gray-300 focus:border-primary"
+                            required
+                          />
+                        </div>
+                      </div>
+                      
+                      <div>
+                        <Label htmlFor="resume" className="text-sm font-semibold text-gray-700">Upload Resume</Label>
+                        <Input
+                          id="resume"
+                          name="resume"
+                          type="file"
+                          accept=".pdf,.doc,.docx"
+                          onChange={handleFileChange}
+                          className="mt-1 border-gray-300 focus:border-primary"
+                          required
+                        />
+                      </div>
+                      
+                      <div>
+                        <Label htmlFor="jobDescription" className="text-sm font-semibold text-gray-700">Job Description</Label>
+                        <Textarea
+                          id="jobDescription"
+                          name="jobDescription"
+                          value={formData.jobDescription}
+                          onChange={handleInputChange}
+                          placeholder="Paste the job description here..."
+                          rows={4}
+                          className="mt-1 border-gray-300 focus:border-primary resize-none"
+                          required
+                        />
+                      </div>
+                      
+                      <div>
+                        <Label htmlFor="desiredJobTitle" className="text-sm font-semibold text-gray-700">Target Job Title</Label>
+                        <Input
+                          id="desiredJobTitle"
+                          name="desiredJobTitle"
+                          value={formData.desiredJobTitle}
+                          onChange={handleInputChange}
+                          placeholder="e.g. Senior Software Engineer"
+                          className="mt-1 border-gray-300 focus:border-primary"
+                          required
+                        />
+                      </div>
+                      
+                      <Button 
+                        type="submit" 
+                        className="w-full bg-primary hover:bg-primary/90 text-white font-semibold py-3 rounded-xl"
+                      >
+                        <Target className="mr-2" size={18} />
+                        Start Analysis
+                      </Button>
+                    </form>
+                  </DialogContent>
+                </Dialog>
+                
+                <Button variant="outline" size="lg" className="text-lg px-8 py-4 rounded-xl border-gray-300">
+                  Watch Demo
+                </Button>
+              </div>
+
+              <div className="flex flex-wrap justify-center items-center gap-8 text-sm text-gray-500">
+                <div className="flex items-center gap-2">
+                  <CheckCircle className="text-green-500" size={16} />
+                  <span>Free Analysis</span>
+                </div>
+                <div className="flex items-center gap-2">
+                  <CheckCircle className="text-green-500" size={16} />
+                  <span>Instant Results</span>
+                </div>
+                <div className="flex items-center gap-2">
+                  <CheckCircle className="text-green-500" size={16} />
+                  <span>No Registration Required</span>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </section>
+
+      {/* Features Section */}
+      <section id="features" className="py-20 bg-white">
+        <div className="container mx-auto px-4">
+          <div className="text-center mb-16">
+            <h2 className="text-4xl md:text-5xl font-fredoka font-bold text-gray-900 mb-4">
+              Powerful Features
+            </h2>
+            <p className="text-xl text-gray-600 max-w-2xl mx-auto">
+              Everything you need to optimize your resume and land your dream job
+            </p>
+          </div>
+
+          <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
+            <Card className="border-0 shadow-lg hover:shadow-xl transition-all duration-300 group">
+              <CardContent className="p-8 text-center">
+                <div className="w-16 h-16 bg-primary/10 rounded-full flex items-center justify-center mx-auto mb-6 group-hover:scale-110 transition-transform">
+                  <BarChart3 className="text-primary" size={32} />
+                </div>
+                <h3 className="text-xl font-bold text-gray-900 mb-4">ATS Score Analysis</h3>
+                <p className="text-gray-600">Get detailed ATS compatibility scores and understand exactly how recruitment systems will evaluate your resume.</p>
+              </CardContent>
+            </Card>
+
+            <Card className="border-0 shadow-lg hover:shadow-xl transition-all duration-300 group">
+              <CardContent className="p-8 text-center">
+                <div className="w-16 h-16 bg-primary/10 rounded-full flex items-center justify-center mx-auto mb-6 group-hover:scale-110 transition-transform">
+                  <Brain className="text-primary" size={32} />
+                </div>
+                <h3 className="text-xl font-bold text-gray-900 mb-4">AI-Powered Insights</h3>
+                <p className="text-gray-600">Receive intelligent recommendations powered by advanced AI to improve your resume's effectiveness.</p>
+              </CardContent>
+            </Card>
+
+            <Card className="border-0 shadow-lg hover:shadow-xl transition-all duration-300 group">
+              <CardContent className="p-8 text-center">
+                <div className="w-16 h-16 bg-primary/10 rounded-full flex items-center justify-center mx-auto mb-6 group-hover:scale-110 transition-transform">
+                  <FileText className="text-primary" size={32} />
+                </div>
+                <h3 className="text-xl font-bold text-gray-900 mb-4">Custom Cover Letters</h3>
+                <p className="text-gray-600">Generate personalized cover letters tailored to specific job descriptions and your unique background.</p>
+              </CardContent>
+            </Card>
+
+            <Card className="border-0 shadow-lg hover:shadow-xl transition-all duration-300 group">
+              <CardContent className="p-8 text-center">
+                <div className="w-16 h-16 bg-primary/10 rounded-full flex items-center justify-center mx-auto mb-6 group-hover:scale-110 transition-transform">
+                  <TrendingUp className="text-primary" size={32} />
+                </div>
+                <h3 className="text-xl font-bold text-gray-900 mb-4">Skill Gap Analysis</h3>
+                <p className="text-gray-600">Identify missing skills and get curated course recommendations to bridge the gap.</p>
+              </CardContent>
+            </Card>
+
+            <Card className="border-0 shadow-lg hover:shadow-xl transition-all duration-300 group">
+              <CardContent className="p-8 text-center">
+                <div className="w-16 h-16 bg-primary/10 rounded-full flex items-center justify-center mx-auto mb-6 group-hover:scale-110 transition-transform">
+                  <Shield className="text-primary" size={32} />
+                </div>
+                <h3 className="text-xl font-bold text-gray-900 mb-4">Privacy First</h3>
+                <p className="text-gray-600">Your data is secure and private. We never store your personal information or share it with third parties.</p>
+              </CardContent>
+            </Card>
+
+            <Card className="border-0 shadow-lg hover:shadow-xl transition-all duration-300 group">
+              <CardContent className="p-8 text-center">
+                <div className="w-16 h-16 bg-primary/10 rounded-full flex items-center justify-center mx-auto mb-6 group-hover:scale-110 transition-transform">
+                  <Clock className="text-primary" size={32} />
+                </div>
+                <h3 className="text-xl font-bold text-gray-900 mb-4">Instant Results</h3>
+                <p className="text-gray-600">Get comprehensive analysis results in seconds, not hours. No waiting, no delays.</p>
+              </CardContent>
+            </Card>
+          </div>
+        </div>
+      </section>
+
+      {/* How It Works Section */}
+      <section id="how-it-works" className="py-20 bg-gray-50">
+        <div className="container mx-auto px-4">
+          <div className="text-center mb-16">
+            <h2 className="text-4xl md:text-5xl font-fredoka font-bold text-gray-900 mb-4">
+              How It Works
+            </h2>
+            <p className="text-xl text-gray-600 max-w-2xl mx-auto">
+              Simple, fast, and effective. Get professional resume insights in three easy steps.
+            </p>
+          </div>
+
+          <div className="max-w-4xl mx-auto">
+            <div className="grid grid-cols-1 md:grid-cols-3 gap-8">
+              <div className="text-center">
+                <div className="w-20 h-20 bg-primary rounded-full flex items-center justify-center mx-auto mb-6">
+                  <span className="text-2xl font-bold text-white">1</span>
+                </div>
+                <h3 className="text-xl font-bold text-gray-900 mb-4">Upload Resume</h3>
+                <p className="text-gray-600">Upload your resume and paste the job description you're targeting.</p>
+                <ArrowRight className="hidden md:block mx-auto mt-6 text-gray-400" size={24} />
+              </div>
+
+              <div className="text-center">
+                <div className="w-20 h-20 bg-primary rounded-full flex items-center justify-center mx-auto mb-6">
+                  <span className="text-2xl font-bold text-white">2</span>
+                </div>
+                <h3 className="text-xl font-bold text-gray-900 mb-4">AI Analysis</h3>
+                <p className="text-gray-600">Our advanced AI analyzes your resume against the job requirements.</p>
+                <ArrowRight className="hidden md:block mx-auto mt-6 text-gray-400" size={24} />
+              </div>
+
+              <div className="text-center">
+                <div className="w-20 h-20 bg-primary rounded-full flex items-center justify-center mx-auto mb-6">
+                  <span className="text-2xl font-bold text-white">3</span>
+                </div>
+                <h3 className="text-xl font-bold text-gray-900 mb-4">Get Results</h3>
+                <p className="text-gray-600">Receive detailed insights, scores, and personalized recommendations.</p>
+              </div>
+            </div>
+          </div>
+        </div>
+      </section>
+
+      {/* Stats Section */}
+      <section className="py-20 bg-primary text-white">
+        <div className="container mx-auto px-4">
+          <div className="grid grid-cols-2 md:grid-cols-4 gap-8 text-center">
+            <div>
+              <div className="text-4xl md:text-5xl font-bold mb-2">50K+</div>
+              <div className="text-primary-foreground/80">Resumes Analyzed</div>
+            </div>
+            <div>
+              <div className="text-4xl md:text-5xl font-bold mb-2">95%</div>
+              <div className="text-primary-foreground/80">Success Rate</div>
+            </div>
+            <div>
+              <div className="text-4xl md:text-5xl font-bold mb-2">30s</div>
+              <div className="text-primary-foreground/80">Average Analysis Time</div>
+            </div>
+            <div>
+              <div className="text-4xl md:text-5xl font-bold mb-2">4.9★</div>
+              <div className="text-primary-foreground/80">User Rating</div>
+            </div>
+          </div>
+        </div>
+      </section>
+
+      {/* Testimonials Section */}
+      <section id="testimonials" className="py-20 bg-white">
+        <div className="container mx-auto px-4">
+          <div className="text-center mb-16">
+            <h2 className="text-4xl md:text-5xl font-fredoka font-bold text-gray-900 mb-4">
+              What Our Users Say
+            </h2>
+            <p className="text-xl text-gray-600 max-w-2xl mx-auto">
+              Join thousands of professionals who have improved their job search success
+            </p>
+          </div>
+
+          <div className="grid grid-cols-1 md:grid-cols-3 gap-8">
+            <Card className="border-0 shadow-lg">
+              <CardContent className="p-8">
+                <div className="flex items-center mb-4">
+                  {[...Array(5)].map((_, i) => (
+                    <Star key={i} className="text-yellow-400 fill-current" size={20} />
+                  ))}
+                </div>
+                <p className="text-gray-600 mb-6">"ResumeSync helped me identify exactly what my resume was missing. I got 3 interview calls within a week of optimizing it!"</p>
+                <div className="flex items-center">
+                  <div className="w-12 h-12 bg-gray-200 rounded-full mr-4"></div>
+                  <div>
+                    <div className="font-semibold text-gray-900">Sarah Chen</div>
+                    <div className="text-sm text-gray-500">Software Engineer</div>
+                  </div>
+                </div>
+              </CardContent>
+            </Card>
+
+            <Card className="border-0 shadow-lg">
+              <CardContent className="p-8">
+                <div className="flex items-center mb-4">
+                  {[...Array(5)].map((_, i) => (
+                    <Star key={i} className="text-yellow-400 fill-current" size={20} />
+                  ))}
+                </div>
+                <p className="text-gray-600 mb-6">"The ATS score feature is a game-changer. I never knew my resume was being filtered out before reaching human recruiters."</p>
+                <div className="flex items-center">
+                  <div className="w-12 h-12 bg-gray-200 rounded-full mr-4"></div>
+                  <div>
+                    <div className="font-semibold text-gray-900">Michael Rodriguez</div>
+                    <div className="text-sm text-gray-500">Marketing Manager</div>
+                  </div>
+                </div>
+              </CardContent>
+            </Card>
+
+            <Card className="border-0 shadow-lg">
+              <CardContent className="p-8">
+                <div className="flex items-center mb-4">
+                  {[...Array(5)].map((_, i) => (
+                    <Star key={i} className="text-yellow-400 fill-current" size={20} />
+                  ))}
+                </div>
+                <p className="text-gray-600 mb-6">"The personalized cover letter feature saved me hours of work. Each one is perfectly tailored to the job description."</p>
+                <div className="flex items-center">
+                  <div className="w-12 h-12 bg-gray-200 rounded-full mr-4"></div>
+                  <div>
+                    <div className="font-semibold text-gray-900">Emily Johnson</div>
+                    <div className="text-sm text-gray-500">Data Analyst</div>
+                  </div>
+                </div>
+              </CardContent>
+            </Card>
+          </div>
+        </div>
+      </section>
+
+      {/* Results Section */}
+      {showResults && results && (
+        <section className="py-20 bg-gray-50">
+          <div className="container mx-auto px-4">
+            <Card className="bg-white rounded-2xl shadow-xl border-0 overflow-hidden">
+              <CardHeader className="text-center bg-gradient-to-r from-primary/5 to-primary/10 py-12">
+                <CardTitle className="text-3xl md:text-4xl font-fredoka font-bold text-gray-900 mb-4">
+                  Your Resume Analysis Report
                 </CardTitle>
                 <p className="text-lg text-gray-600">Generated on {results.reportDate}</p>
               </CardHeader>
               
-              <CardContent className="space-y-12">
+              <CardContent className="p-8 md:p-12 space-y-16">
                 {/* ATS Score */}
                 <div className="text-center">
-                  <h3 className="text-3xl font-fredoka font-bold text-neon-purple mb-6">ATS Resume Score</h3>
-                  <div className="flex justify-center mb-6">
+                  <h3 className="text-2xl md:text-3xl font-bold text-gray-900 mb-8">ATS Compatibility Score</h3>
+                  <div className="flex justify-center mb-8">
                     <ATSScoreChart score={results.atsScore} />
                   </div>
-                  <div className="text-6xl font-fredoka font-bold text-neon-pink mb-2">{results.atsScore}%</div>
-                  <Progress value={results.atsScore} className="w-full max-w-md mx-auto h-6 rounded-full" />
+                  <Progress value={results.atsScore} className="w-full max-w-md mx-auto h-4 rounded-full" />
+                  <p className="text-gray-600 mt-4">Your resume scores {results.atsScore}% for ATS compatibility</p>
                 </div>
 
                 {/* Skill Breakdown */}
                 <div>
-                  <h3 className="text-3xl font-fredoka font-bold text-neon-purple mb-6 text-center">Skill Breakdown</h3>
+                  <h3 className="text-2xl md:text-3xl font-bold text-gray-900 mb-8 text-center">Skill Analysis</h3>
                   <SkillChart data={results.skillBreakdown} />
                 </div>
 
                 {/* Missing Skills */}
                 <div>
-                  <h3 className="text-3xl font-fredoka font-bold text-neon-purple mb-6 text-center">Missing Skills to Level Up</h3>
+                  <h3 className="text-2xl md:text-3xl font-bold text-gray-900 mb-8 text-center">Skills to Develop</h3>
                   <div className="flex flex-wrap gap-3 justify-center">
                     {results.missingSkills.map((skill, index) => (
-                      <Badge key={index} variant="outline" className="text-lg py-2 px-4 border-neon-pink text-neon-pink font-semibold rounded-full">
+                      <Badge key={index} variant="outline" className="text-base py-2 px-4 border-primary/30 text-primary rounded-full">
                         {skill}
                       </Badge>
                     ))}
@@ -302,15 +549,15 @@ ${formData.name}`,
 
                 {/* Suggested Courses */}
                 <div>
-                  <h3 className="text-3xl font-fredoka font-bold text-neon-purple mb-6 text-center">Suggested Online Courses</h3>
-                  <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+                  <h3 className="text-2xl md:text-3xl font-bold text-gray-900 mb-8 text-center">Recommended Courses</h3>
+                  <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
                     {results.suggestedCourses.map((course, index) => (
-                      <Card key={index} className="bg-gradient-to-r from-vibrant-pink/10 to-neon-purple/10 border-2 border-neon-pink/30 rounded-2xl card-hover">
+                      <Card key={index} className="border border-gray-200 hover:shadow-lg transition-shadow">
                         <CardContent className="p-6">
                           <div className="flex items-center gap-3">
-                            <BookOpen className="text-neon-pink" size={24} />
+                            <BookOpen className="text-primary" size={24} />
                             <div>
-                              <h4 className="font-semibold text-neon-purple">{course.name}</h4>
+                              <h4 className="font-semibold text-gray-900">{course.name}</h4>
                               <p className="text-sm text-gray-600">{course.platform}</p>
                             </div>
                           </div>
@@ -322,12 +569,12 @@ ${formData.name}`,
 
                 {/* Evaluation Summary */}
                 <div>
-                  <h3 className="text-3xl font-fredoka font-bold text-neon-purple mb-6 text-center">Evaluation Summary</h3>
-                  <div className="bg-gradient-to-r from-neon-pink/10 to-neon-purple/10 rounded-2xl p-6 border-2 border-neon-pink/30">
-                    <ul className="space-y-3">
+                  <h3 className="text-2xl md:text-3xl font-bold text-gray-900 mb-8 text-center">Professional Assessment</h3>
+                  <div className="bg-gray-50 rounded-2xl p-8 border border-gray-200">
+                    <ul className="space-y-4">
                       {results.evaluationSummary.map((point, index) => (
                         <li key={index} className="flex items-start gap-3">
-                          <Star className="text-neon-pink mt-1 flex-shrink-0" size={20} />
+                          <CheckCircle className="text-green-500 mt-1 flex-shrink-0" size={20} />
                           <span className="text-gray-700">{point}</span>
                         </li>
                       ))}
@@ -335,29 +582,14 @@ ${formData.name}`,
                   </div>
                 </div>
 
-                {/* Mentorship Recommendations */}
+                {/* Cover Letter */}
                 <div>
-                  <h3 className="text-3xl font-fredoka font-bold text-neon-purple mb-6 text-center">Mentorship Recommendations</h3>
-                  <div className="bg-gradient-to-r from-electric-blue/10 to-lime-green/10 rounded-2xl p-6 border-2 border-electric-blue/30">
-                    <ul className="space-y-3">
-                      {results.mentorshipRecommendations.map((recommendation, index) => (
-                        <li key={index} className="flex items-start gap-3">
-                          <Users className="text-electric-blue mt-1 flex-shrink-0" size={20} />
-                          <span className="text-gray-700">{recommendation}</span>
-                        </li>
-                      ))}
-                    </ul>
-                  </div>
-                </div>
-
-                {/* AI-Generated Cover Letter */}
-                <div>
-                  <h3 className="text-3xl font-fredoka font-bold text-neon-purple mb-6 text-center">AI-Generated Cover Letter</h3>
+                  <h3 className="text-2xl md:text-3xl font-bold text-gray-900 mb-8 text-center">Personalized Cover Letter</h3>
                   <Textarea
                     value={results.coverLetter}
                     readOnly
                     rows={12}
-                    className="w-full rounded-2xl border-2 border-neon-pink/30 bg-white/50 text-gray-700 resize-none"
+                    className="w-full rounded-xl border-gray-300 bg-white text-gray-700 resize-none"
                   />
                 </div>
 
@@ -366,47 +598,78 @@ ${formData.name}`,
                   <Button 
                     onClick={handleDownloadPDF}
                     size="lg"
-                    className="bg-gradient-to-r from-lime-green to-electric-blue hover:from-electric-blue hover:to-lime-green text-white font-fredoka font-semibold text-xl px-12 py-6 rounded-full shadow-2xl glow-effect card-hover"
+                    className="bg-primary hover:bg-primary/90 text-white font-semibold text-lg px-8 py-4 rounded-xl shadow-lg"
                   >
-                    <Download className="mr-3" size={24} />
-                    Download as PDF
+                    <Download className="mr-3" size={20} />
+                    Download Complete Report
                   </Button>
                 </div>
               </CardContent>
             </Card>
           </div>
-        )}
+        </section>
+      )}
 
-        {/* Footer */}
-        <footer className="bg-black/20 backdrop-blur-sm mt-20 py-12">
-          <div className="container mx-auto px-4 text-center">
-            <div className="mb-8">
-              <h3 className="text-3xl font-fredoka font-bold text-white mb-4">
-                Tired of getting ghosted by jobs? 
-              </h3>
-              <p className="text-xl text-white/90">
-                Let Resume Dating fix your profile. 💔➡️💕
+      {/* CTA Section */}
+      <section className="py-20 bg-gray-900 text-white">
+        <div className="container mx-auto px-4 text-center">
+          <div className="max-w-3xl mx-auto">
+            <h2 className="text-4xl md:text-5xl font-fredoka font-bold mb-6">
+              Ready to Land Your Dream Job?
+            </h2>
+            <p className="text-xl text-gray-300 mb-8">
+              Join thousands of professionals who have transformed their job search with ResumeSync
+            </p>
+            <Button 
+              size="lg" 
+              className="bg-primary hover:bg-primary/90 text-white font-semibold text-lg px-8 py-4 rounded-xl"
+              onClick={() => setIsModalOpen(true)}
+            >
+              <Rocket className="mr-2" size={20} />
+              Start Your Analysis Now
+            </Button>
+          </div>
+        </div>
+      </section>
+
+      {/* Footer */}
+      <footer className="bg-white border-t border-gray-200 py-12">
+        <div className="container mx-auto px-4">
+          <div className="grid grid-cols-1 md:grid-cols-4 gap-8">
+            <div className="md:col-span-2">
+              <div className="flex items-center space-x-2 mb-4">
+                <Heart className="text-primary" size={28} />
+                <span className="text-2xl font-fredoka font-bold text-gray-800">ResumeSync</span>
+              </div>
+              <p className="text-gray-600 mb-4">
+                The most advanced AI-powered resume optimization platform. Find your perfect career match with intelligent analysis and personalized recommendations.
               </p>
             </div>
             
-            <div className="flex justify-center space-x-6 mb-8">
-              <div className="w-12 h-12 bg-gradient-to-r from-neon-pink to-neon-purple rounded-full flex items-center justify-center card-hover cursor-pointer">
-                <span className="text-white font-bold">f</span>
-              </div>
-              <div className="w-12 h-12 bg-gradient-to-r from-electric-blue to-lime-green rounded-full flex items-center justify-center card-hover cursor-pointer">
-                <span className="text-white font-bold">t</span>
-              </div>
-              <div className="w-12 h-12 bg-gradient-to-r from-neon-purple to-vibrant-pink rounded-full flex items-center justify-center card-hover cursor-pointer">
-                <span className="text-white font-bold">in</span>
-              </div>
+            <div>
+              <h4 className="font-semibold text-gray-900 mb-4">Product</h4>
+              <ul className="space-y-2 text-gray-600">
+                <li><a href="#" className="hover:text-primary transition-colors">Features</a></li>
+                <li><a href="#" className="hover:text-primary transition-colors">Pricing</a></li>
+                <li><a href="#" className="hover:text-primary transition-colors">API</a></li>
+              </ul>
             </div>
             
-            <p className="text-white/70 font-medium">
-              © 2024 Resume Dating. Made with 💕 for job seekers everywhere.
-            </p>
+            <div>
+              <h4 className="font-semibold text-gray-900 mb-4">Support</h4>
+              <ul className="space-y-2 text-gray-600">
+                <li><a href="#" className="hover:text-primary transition-colors">Help Center</a></li>
+                <li><a href="#" className="hover:text-primary transition-colors">Contact</a></li>
+                <li><a href="#" className="hover:text-primary transition-colors">Privacy</a></li>
+              </ul>
+            </div>
           </div>
-        </footer>
-      </div>
+          
+          <div className="border-t border-gray-200 mt-8 pt-8 text-center text-gray-600">
+            <p>© 2024 ResumeSync. Made with care for job seekers everywhere.</p>
+          </div>
+        </div>
+      </footer>
     </div>
   );
 };
