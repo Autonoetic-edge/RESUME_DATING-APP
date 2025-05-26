@@ -82,9 +82,10 @@
   }
 
   body {
-    @apply bg-background text-foreground font-poppins;
+    @apply text-foreground font-poppins;
     font-feature-settings: "cv02", "cv03", "cv04", "cv11";
-    background: linear-gradient(135deg, #0a0a0a 0%, #1a0a1a 50%, #0a0a1a 100%);
+    background: linear-gradient(135deg, #000000 0%, #0a0a1a 25%, #1a0a2e 50%, #16213e 75%, #0f3460 100%);
+    min-height: 100vh;
   }
 
   html {
@@ -120,6 +121,18 @@
     border: 1px solid rgba(255, 255, 255, 0.1);
   }
 
+  .dark-card {
+    background: rgba(20, 20, 40, 0.8);
+    backdrop-filter: blur(10px);
+    border: 1px solid rgba(233, 30, 99, 0.2);
+  }
+
+  .dark-card-solid {
+    background: linear-gradient(135deg, rgba(20, 20, 40, 0.95) 0%, rgba(30, 20, 50, 0.95) 100%);
+    border: 1px solid rgba(233, 30, 99, 0.3);
+    backdrop-filter: blur(10px);
+  }
+
   @keyframes fadeIn {
     from {
       opacity: 0;
@@ -142,5 +155,20 @@
     -webkit-background-clip: text;
     -webkit-text-fill-color: transparent;
     background-clip: text;
+  }
+
+  .text-gradient-light {
+    background: linear-gradient(135deg, #f06292, #ab47bc, #7e57c2);
+    -webkit-background-clip: text;
+    -webkit-text-fill-color: transparent;
+    background-clip: text;
+  }
+
+  .text-white-safe {
+    color: rgba(255, 255, 255, 0.95);
+  }
+
+  .text-gray-safe {
+    color: rgba(255, 255, 255, 0.7);
   }
 }
