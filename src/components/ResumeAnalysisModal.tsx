@@ -21,7 +21,7 @@ const ResumeAnalysisModal: React.FC<ResumeAnalysisModalProps> = ({
   handleSubmit
 }) => {
   return (
-    <DialogContent className="max-w-2xl max-h-[90vh] overflow-y-auto dark-card-solid rounded-2xl">
+    <DialogContent className="max-w-2xl max-h-[95vh] overflow-y-auto dark-card-solid rounded-2xl">
       <DialogHeader>
         <DialogTitle className="text-2xl font-fredoka font-bold text-gradient text-center mb-6">
           Upload Your Resume for Analysis
@@ -93,6 +93,19 @@ const ResumeAnalysisModal: React.FC<ResumeAnalysisModalProps> = ({
             value={formData.desiredJobTitle}
             onChange={handleInputChange}
             placeholder="e.g. Senior Software Engineer"
+            className="mt-1 bg-black/50 border-white/20 text-white-safe placeholder:text-gray-safe focus:border-pink-500"
+            required
+          />
+        </div>
+
+        <div>
+          <Label htmlFor="companyName" className="text-sm font-semibold text-white-safe">Company Name</Label>
+          <Input
+            id="companyName"
+            name="companyName"
+            value={formData.companyName}
+            onChange={handleInputChange}
+            placeholder="e.g. hashmap pvt.ltd"
             className="mt-1 bg-black/50 border-white/20 text-white-safe placeholder:text-gray-safe focus:border-pink-500"
             required
           />

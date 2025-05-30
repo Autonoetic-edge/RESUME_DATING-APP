@@ -17,6 +17,7 @@ interface FormData {
   resume: File | null;
   jobDescription: string;
   desiredJobTitle: string;
+  companyName: string;
 }
 
 interface Results {
@@ -39,7 +40,8 @@ const Index = () => {
     email: '',
     resume: null,
     jobDescription: '',
-    desiredJobTitle: ''
+    desiredJobTitle: '',
+    companyName: '',
   });
   const [results, setResults] = useState<Results | null>(null);
   const { toast } = useToast();
@@ -102,10 +104,10 @@ ${formData.name}`,
     return mockResults;
   };
 
-  const handleSubmit = (e: React.FormEvent) => {
+  const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
     
-    if (!formData.name || !formData.email || !formData.resume || !formData.jobDescription || !formData.desiredJobTitle) {
+    if (!formData.name || !formData.email || !formData.resume || !formData.jobDescription || !formData.desiredJobTitle || !formData.companyName) {
       toast({
         title: "Missing Information",
         description: "Please fill in all fields before submitting.",
@@ -114,11 +116,23 @@ ${formData.name}`,
       return;
     }
 
-    const mockResults = generateMockResults(formData);
-    setResults(mockResults);
-    setIsModalOpen(false);
-    setShowResults(true);
+    const formPayload: FormData = {
+      name: formData.name,
+      email: formData.email,
+      resume: formData.resume,
+      jobDescription: formData.jobDescription,
+      desiredJobTitle: formData.desiredJobTitle, 
+      companyName: formData.companyName
+    }
+
+    const webHookResponse: any = await fetch("https://n8n.srv747470.hstgr.cloud/webhook-test/Submit-form", {
+      method: "POST",
+      body: formPayload as unknown as BodyInit
+    })
+
+    console.log("response from webhook is: ", webHookResponse);
     
+
     toast({
       title: "Analysis Complete! 🎉",
       description: "Your resume has been analyzed. Check out your results below!",
