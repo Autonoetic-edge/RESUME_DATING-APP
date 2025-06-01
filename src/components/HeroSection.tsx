@@ -12,6 +12,7 @@ interface HeroSectionProps {
   handleInputChange: (e: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement>) => void;
   handleFileChange: (e: React.ChangeEvent<HTMLInputElement>) => void;
   handleSubmit: (e: React.FormEvent) => void;
+  showData: () => any;
 }
 
 const HeroSection: React.FC<HeroSectionProps> = ({
@@ -20,7 +21,8 @@ const HeroSection: React.FC<HeroSectionProps> = ({
   formData,
   handleInputChange,
   handleFileChange,
-  handleSubmit
+  handleSubmit,
+  showData
 }) => {
   return (
     <section className="relative overflow-hidden py-20 lg:py-32">
@@ -58,6 +60,9 @@ const HeroSection: React.FC<HeroSectionProps> = ({
               
               <Button variant="outline" size="lg" className="text-lg px-8 py-4 rounded-xl border-white/30 text-white-safe hover:bg-white/10">
                 Watch Demo
+              </Button>
+              <Button onClick={showData} variant="outline" size="lg" className="text-lg px-8 py-4 rounded-xl border-white/30 text-white-safe hover:bg-white/10">
+                ShowData
               </Button>
             </div>
 

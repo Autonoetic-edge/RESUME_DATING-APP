@@ -1,16 +1,16 @@
-
-import React, { useState } from 'react';
+import React, { useState } from "react";
 import { useToast } from "@/hooks/use-toast";
-import Navigation from '@/components/Navigation';
-import HeroSection from '@/components/HeroSection';
-import FeaturesSection from '@/components/FeaturesSection';
-import HowItWorksSection from '@/components/HowItWorksSection';
-import StatsSection from '@/components/StatsSection';
-import TestimonialsSection from '@/components/TestimonialsSection';
-import CTASection from '@/components/CTASection';
-import Footer from '@/components/Footer';
-import ResultsModal from '@/components/ResultsModal';
-
+import Navigation from "@/components/Navigation";
+import HeroSection from "@/components/HeroSection";
+import FeaturesSection from "@/components/FeaturesSection";
+import HowItWorksSection from "@/components/HowItWorksSection";
+import StatsSection from "@/components/StatsSection";
+import TestimonialsSection from "@/components/TestimonialsSection";
+import CTASection from "@/components/CTASection";
+import Footer from "@/components/Footer";
+import ResultsModal from "@/components/ResultsModal";
+import { web } from "@/googleDocsInfo.json";
+import { gapi } from "gapi-script";
 interface FormData {
   name: string;
   email: string;
@@ -35,25 +35,29 @@ interface Results {
 const Index = () => {
   const [isModalOpen, setIsModalOpen] = useState(false);
   const [showResults, setShowResults] = useState(false);
+
+  const [sheetData, setSheetData] = useState<string[][]>([]);
   const [formData, setFormData] = useState<FormData>({
-    name: '',
-    email: '',
+    name: "",
+    email: "",
     resume: null,
-    jobDescription: '',
-    desiredJobTitle: '',
-    companyName: '',
+    jobDescription: "",
+    desiredJobTitle: "",
+    companyName: "",
   });
   const [results, setResults] = useState<Results | null>(null);
   const { toast } = useToast();
 
-  const handleInputChange = (e: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement>) => {
+  const handleInputChange = (
+    e: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement>
+  ) => {
     const { name, value } = e.target;
-    setFormData(prev => ({ ...prev, [name]: value }));
+    setFormData((prev) => ({ ...prev, [name]: value }));
   };
 
   const handleFileChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     const file = e.target.files?.[0] || null;
-    setFormData(prev => ({ ...prev, resume: file }));
+    setFormData((prev) => ({ ...prev, resume: file }));
   };
 
   const generateMockResults = (formData: FormData): Results => {
@@ -61,29 +65,29 @@ const Index = () => {
       name: formData.name,
       atsScore: Math.floor(Math.random() * 30) + 70,
       skillBreakdown: [
-        { skill: 'JavaScript', current: 85, required: 90 },
-        { skill: 'React', current: 80, required: 85 },
-        { skill: 'Python', current: 60, required: 75 },
-        { skill: 'Communication', current: 90, required: 85 },
-        { skill: 'Project Management', current: 70, required: 80 }
+        { skill: "JavaScript", current: 85, required: 90 },
+        { skill: "React", current: 80, required: 85 },
+        { skill: "Python", current: 60, required: 75 },
+        { skill: "Communication", current: 90, required: 85 },
+        { skill: "Project Management", current: 70, required: 80 },
       ],
-      missingSkills: ['Docker', 'AWS', 'TypeScript', 'Agile Methodology'],
+      missingSkills: ["Docker", "AWS", "TypeScript", "Agile Methodology"],
       suggestedCourses: [
-        { name: 'Complete Docker Course', platform: 'Udemy', url: '#' },
-        { name: 'AWS Cloud Practitioner', platform: 'Coursera', url: '#' },
-        { name: 'TypeScript Fundamentals', platform: 'Udemy', url: '#' },
-        { name: 'Agile Project Management', platform: 'Coursera', url: '#' }
+        { name: "Complete Docker Course", platform: "Udemy", url: "#" },
+        { name: "AWS Cloud Practitioner", platform: "Coursera", url: "#" },
+        { name: "TypeScript Fundamentals", platform: "Udemy", url: "#" },
+        { name: "Agile Project Management", platform: "Coursera", url: "#" },
       ],
       evaluationSummary: [
-        'Strong technical foundation with room for improvement in cloud technologies',
-        'Excellent communication skills highlighted throughout resume',
-        'Missing some key industry-standard tools and methodologies',
-        'Experience aligns well with desired role requirements'
+        "Strong technical foundation with room for improvement in cloud technologies",
+        "Excellent communication skills highlighted throughout resume",
+        "Missing some key industry-standard tools and methodologies",
+        "Experience aligns well with desired role requirements",
       ],
       mentorshipRecommendations: [
-        'Connect with senior developers in your field through LinkedIn',
-        'Join tech communities and attend virtual meetups',
-        'Consider finding a mentor through ADPList or MentorCruise'
+        "Connect with senior developers in your field through LinkedIn",
+        "Join tech communities and attend virtual meetups",
+        "Consider finding a mentor through ADPList or MentorCruise",
       ],
       coverLetter: `Dear Hiring Manager,
 
@@ -95,23 +99,30 @@ I would welcome the opportunity to discuss how my skills and enthusiasm can cont
 
 Best regards,
 ${formData.name}`,
-      reportDate: new Date().toLocaleDateString('en-US', { 
-        year: 'numeric', 
-        month: 'long', 
-        day: 'numeric' 
-      })
+      reportDate: new Date().toLocaleDateString("en-US", {
+        year: "numeric",
+        month: "long",
+        day: "numeric",
+      }),
     };
     return mockResults;
   };
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
-    
-    if (!formData.name || !formData.email || !formData.resume || !formData.jobDescription || !formData.desiredJobTitle || !formData.companyName) {
+
+    if (
+      !formData.name ||
+      !formData.email ||
+      !formData.resume ||
+      !formData.jobDescription ||
+      !formData.desiredJobTitle ||
+      !formData.companyName
+    ) {
       toast({
         title: "Missing Information",
         description: "Please fill in all fields before submitting.",
-        variant: "destructive"
+        variant: "destructive",
       });
       return;
     }
@@ -121,21 +132,24 @@ ${formData.name}`,
       email: formData.email,
       resume: formData.resume,
       jobDescription: formData.jobDescription,
-      desiredJobTitle: formData.desiredJobTitle, 
-      companyName: formData.companyName
-    }
+      desiredJobTitle: formData.desiredJobTitle,
+      companyName: formData.companyName,
+    };
 
-    const webHookResponse: any = await fetch("https://n8n.srv747470.hstgr.cloud/webhook-test/Submit-form", {
-      method: "POST",
-      body: formPayload as unknown as BodyInit
-    })
+    const webHookResponse: any = await fetch(
+      "https://n8n.srv747470.hstgr.cloud/webhook-test/Submit-form",
+      {
+        method: "GET",
+        // body: formPayload as unknown as BodyInit
+      }
+    );
 
     console.log("response from webhook is: ", webHookResponse);
-    
 
     toast({
       title: "Analysis Complete! 🎉",
-      description: "Your resume has been analyzed. Check out your results below!",
+      description:
+        "Your resume has been analyzed. Check out your results below!",
     });
   };
 
@@ -144,7 +158,7 @@ ${formData.name}`,
       title: "PDF Downloaded! 📄",
       description: "Your resume analysis report has been downloaded.",
     });
-    
+
     // Redirect back to landing page after download
     setShowResults(false);
     setResults(null);
@@ -155,10 +169,52 @@ ${formData.name}`,
     setResults(null);
   };
 
+  const getValues = (
+    spreadsheetId: string,
+    range: string,
+    callback: (data: string[][]) => void
+  ) => {
+    console.log(gapi.client);
+    
+    gapi.client?.sheets.spreadsheets.values
+      .get({
+        spreadsheetId,
+        range,
+      })
+      .then((response: any) => {
+        const result = response.result;
+        const values = result.values || [];
+        const numRows = values.length;
+        console.log(`${numRows} rows retrieved.`);
+
+        callback(values); // pass data back to caller
+      })
+      .catch((err: any) => {
+        console.error("Error fetching sheet:", err.message);
+        toast({
+          title: "Error!",
+          description:
+            err.message || "Failed to fetch data from Google Sheets.",
+          variant: "destructive",
+        });
+      });
+  }
+
+  const showData = () => {
+    const SHEET_ID = "1XD22bOgkL30sfIgXznfrlIYgpftSELcEDZXbjR5DFeI";
+    const RANGE = "Sheet1!A1:C10"; // adjust as needed
+
+    getValues(SHEET_ID, RANGE, (data) => {
+      setSheetData(data);
+      console.log(sheetData);
+      
+    });
+  };
+
   return (
     <div className="min-h-screen">
       <Navigation />
-      
+
       <HeroSection
         isModalOpen={isModalOpen}
         setIsModalOpen={setIsModalOpen}
@@ -166,8 +222,9 @@ ${formData.name}`,
         handleInputChange={handleInputChange}
         handleFileChange={handleFileChange}
         handleSubmit={handleSubmit}
+        showData={showData}
       />
-      
+
       <FeaturesSection />
       <HowItWorksSection />
       <StatsSection />
