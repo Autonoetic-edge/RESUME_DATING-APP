@@ -169,46 +169,7 @@ ${formData.name}`,
     setResults(null);
   };
 
-  const getValues = (
-    spreadsheetId: string,
-    range: string,
-    callback: (data: string[][]) => void
-  ) => {
-    console.log(gapi.client);
-    
-    gapi.client?.sheets.spreadsheets.values
-      .get({
-        spreadsheetId,
-        range,
-      })
-      .then((response: any) => {
-        const result = response.result;
-        const values = result.values || [];
-        const numRows = values.length;
-        console.log(`${numRows} rows retrieved.`);
-
-        callback(values); // pass data back to caller
-      })
-      .catch((err: any) => {
-        console.error("Error fetching sheet:", err.message);
-        toast({
-          title: "Error!",
-          description:
-            err.message || "Failed to fetch data from Google Sheets.",
-          variant: "destructive",
-        });
-      });
-  }
-
   const showData = () => {
-    const SHEET_ID = "1XD22bOgkL30sfIgXznfrlIYgpftSELcEDZXbjR5DFeI";
-    const RANGE = "Sheet1!A1:C10"; // adjust as needed
-
-    getValues(SHEET_ID, RANGE, (data) => {
-      setSheetData(data);
-      console.log(sheetData);
-      
-    });
   };
 
   return (
