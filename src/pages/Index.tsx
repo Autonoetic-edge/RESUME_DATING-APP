@@ -9,8 +9,8 @@ import TestimonialsSection from "@/components/TestimonialsSection";
 import CTASection from "@/components/CTASection";
 import Footer from "@/components/Footer";
 import ResultsModal from "@/components/ResultsModal";
-import { web } from "@/googleDocsInfo.json";
-import { gapi } from "gapi-script";
+
+
 interface FormData {
   name: string;
   email: string;
