@@ -1,4 +1,3 @@
-
 import React from 'react';
 import { DialogContent, DialogHeader, DialogTitle } from "@/components/ui/dialog";
 import { Button } from "@/components/ui/button";
@@ -6,6 +5,7 @@ import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
 import { Textarea } from "@/components/ui/textarea";
 import { Target } from 'lucide-react';
+import { useToast } from "@/hooks/use-toast";
 
 interface ResumeAnalysisModalProps {
   formData: any;
@@ -20,6 +20,55 @@ const ResumeAnalysisModal: React.FC<ResumeAnalysisModalProps> = ({
   handleFileChange,
   handleSubmit
 }) => {
+  const { toast } = useToast();
+
+  const handleFormSubmit = async (e: React.FormEvent) => {
+    e.preventDefault();
+    
+    if (!formData.name || !formData.email || !formData.resume || !formData.jobDescription || !formData.desiredJobTitle || !formData.companyName) {
+      toast({
+        title: "Missing Information",
+        description: "Please fill in all fields before submitting.",
+        variant: "destructive"
+      });
+      return;
+    }
+
+    try {
+      const formDataToSend = new FormData();
+      formDataToSend.append('name', formData.name);
+      formDataToSend.append('email', formData.email);
+      formDataToSend.append('resume', formData.resume);
+      formDataToSend.append('jobDescription', formData.jobDescription);
+      formDataToSend.append('desiredJobTitle', formData.desiredJobTitle);
+      formDataToSend.append('companyName', formData.companyName);
+
+      const response = await fetch("https://n8n.srv747470.hstgr.cloud/webhook-test/Submit-form", {
+        method: "POST",
+        body: formDataToSend
+      });
+
+      if (!response.ok) {
+        throw new Error('Failed to submit form');
+      }
+
+      toast({
+        title: "Success! 🎉",
+        description: "Your resume has been submitted for analysis.",
+      });
+
+      // Call the parent's handleSubmit after successful webhook submission
+      handleSubmit(e);
+    } catch (error) {
+      console.error('Error submitting form:', error);
+      toast({
+        title: "Error",
+        description: "Failed to submit form. Please try again.",
+        variant: "destructive"
+      });
+    }
+  };
+
   return (
     <DialogContent className="max-w-2xl max-h-[95vh] overflow-y-auto dark-card-solid rounded-2xl">
       <DialogHeader>
@@ -28,7 +77,7 @@ const ResumeAnalysisModal: React.FC<ResumeAnalysisModalProps> = ({
         </DialogTitle>
       </DialogHeader>
       
-      <form onSubmit={handleSubmit} className="space-y-6">
+      <form onSubmit={handleFormSubmit} className="space-y-6">
         <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
           <div>
             <Label htmlFor="name" className="text-sm font-semibold text-white-safe">Full Name</Label>
