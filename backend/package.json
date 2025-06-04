@@ -18,5 +18,11 @@
     "express": "^5.1.0",
     "mongodb": "^6.16.0",
     "mongoose": "^8.15.1"
+  },
+  "devDependencies": {
+    "@types/cors": "^2.8.18",
+    "@types/express": "^5.0.2",
+    "@types/mongoose": "^5.11.97",
+    "@types/node": "^22.15.29"
   }
 }

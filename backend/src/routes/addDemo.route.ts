@@ -4,7 +4,7 @@ import userModel from '../model/user.model';
 const router = express.Router();
 
 // POST /api/users
-router.post('/users', async (req, res) => {
+router.post('/users', async (req: Request, res: Response) => {
     try {
         console.log("inside...");
         
@@ -13,7 +13,6 @@ router.post('/users', async (req, res) => {
             score,
             breakdown,
             missingSkills,
-            date,
             jd,
             evaluationOfResume,
             mentorship,
@@ -28,7 +27,6 @@ router.post('/users', async (req, res) => {
             score,
             breakdown,
             missingSkills,
-            date,
             jd,
             evaluationOfResume,
             mentorship,
