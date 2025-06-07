@@ -32,6 +32,15 @@ interface Results {
   reportDate: string;
 }
 
+interface HeroSectionProps {
+  isModalOpen: boolean;
+  setIsModalOpen: (open: boolean) => void;
+  formData: any;
+  handleInputChange: (e: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement>) => void;
+  handleFileChange: (e: React.ChangeEvent<HTMLInputElement>) => void;
+  handleSubmit: (e: React.FormEvent) => void;
+}
+
 const Index = () => {
   const [isModalOpen, setIsModalOpen] = useState(false);
   const [showResults, setShowResults] = useState(false);
@@ -127,30 +136,164 @@ ${formData.name}`,
       return;
     }
 
-    const formPayload: FormData = {
-      name: formData.name,
-      email: formData.email,
-      resume: formData.resume,
-      jobDescription: formData.jobDescription,
-      desiredJobTitle: formData.desiredJobTitle,
-      companyName: formData.companyName,
-    };
+    try {
+      // Close the upload modal
+      setIsModalOpen(false);
 
-    const webHookResponse: any = await fetch(
-      "https://n8n.srv747470.hstgr.cloud/webhook-test/Submit-form",
-      {
-        method: "GET",
-        // body: formPayload as unknown as BodyInit
+      // Show loading toast
+      toast({
+        title: "Analysis in Progress...",
+        description: "Please wait while we analyze your resume. This may take a few minutes.",
+      });
+
+      // Create form data for n8n webhook
+      const formDataToSend = new FormData();
+      formDataToSend.append('name', formData.name);
+      formDataToSend.append('email', formData.email.toLowerCase()); // Ensure email is lowercase
+      formDataToSend.append('resume', formData.resume);
+      formDataToSend.append('jobDescription', formData.jobDescription);
+      formDataToSend.append('desiredJobTitle', formData.desiredJobTitle);
+      formDataToSend.append('companyName', formData.companyName);
+
+      console.log('Sending data to n8n webhook...', {
+        name: formData.name,
+        email: formData.email.toLowerCase(),
+        jobDescription: formData.jobDescription,
+        desiredJobTitle: formData.desiredJobTitle,
+        companyName: formData.companyName
+      });
+
+      // Send data to n8n webhook
+      const webhookResponse = await fetch(
+        "https://n8n.srv747470.hstgr.cloud/webhook/Submit-form",
+        {
+          method: "POST",
+          body: formDataToSend,
+        }
+      );
+
+      if (!webhookResponse.ok) {
+        throw new Error('Failed to submit form to n8n workflow');
       }
-    );
 
-    console.log("response from webhook is: ", webHookResponse);
+      console.log('Webhook call successful, waiting 1 minute before starting to poll...');
 
-    toast({
-      title: "Analysis Complete! 🎉",
-      description:
-        "Your resume has been analyzed. Check out your results below!",
-    });
+      // Show waiting toast
+      toast({
+        title: "Processing...",
+        description: "Your resume is being processed. We'll check for results in 1 minute.",
+      });
+
+      // Wait for 1 minute before starting to poll
+      await new Promise(resolve => setTimeout(resolve, 60 * 1000));
+
+      console.log('Starting to poll for results...');
+      toast({
+        title: "Checking Results...",
+        description: "Checking for your analysis results...",
+      });
+
+      let pollCount = 0;
+      const maxPolls = 5; // Maximum 5 polling attempts
+
+      // Poll for results every 2 seconds
+      const pollInterval = setInterval(async () => {
+        try {
+          pollCount++;
+          console.log(`Polling attempt ${pollCount} of ${maxPolls}...`);
+
+          // Fetch analysis results from backend using email (lowercase)
+          const response = await fetch(`http://localhost:5000/api/resume-analysis/${formData.email.toLowerCase()}`);
+          
+          if (response.ok) {
+            const data = await response.json();
+            console.log('Received data:', data);
+            
+            if (data.data) {
+              console.log('Analysis results found!');
+              // Clear polling interval
+              clearInterval(pollInterval);
+              
+              // Transform the data to match our Results interface
+              const analysisResults: Results = {
+                name: data.data.name,
+                atsScore: data.data.score,
+                skillBreakdown: Object.entries(data.data.breakdown || {}).map(([skill, value]) => ({
+                  skill: skill.replace(/([A-Z])/g, ' $1').trim(),
+                  current: typeof value === 'number' ? value : 0,
+                  required: 90
+                })),
+                missingSkills: Array.isArray(data.data.missingSkills) ? data.data.missingSkills : [],
+                suggestedCourses: [], // You might want to add this to your backend
+                evaluationSummary: data.data.evaluationOfResume ? [data.data.evaluationOfResume] : [],
+                mentorshipRecommendations: data.data.mentorship ? [data.data.mentorship] : [],
+                coverLetter: data.data.coverLetter || '',
+                reportDate: new Date().toLocaleDateString("en-US", {
+                  year: "numeric",
+                  month: "long",
+                  day: "numeric",
+                }),
+              };
+
+              console.log('Transformed results:', analysisResults);
+
+              // Set results and show results modal
+              setResults(analysisResults);
+              setShowResults(true);
+
+              toast({
+                title: "Analysis Complete! 🎉",
+                description: "Your resume has been analyzed. Check out your results below!",
+              });
+            } else {
+              console.log('No results found yet...');
+            }
+          } else {
+            const errorData = await response.json().catch(() => null);
+            console.log('Error response from API:', {
+              status: response.status,
+              statusText: response.statusText,
+              data: errorData
+            });
+
+            // If we get a 404, it means the analysis is still in progress
+            if (response.status === 404) {
+              console.log('Analysis still in progress...');
+            } else {
+              // For other errors, we might want to stop polling
+              console.error('Unexpected error from API, stopping polling');
+              clearInterval(pollInterval);
+              toast({
+                title: "Error",
+                description: "Failed to fetch analysis results. Please try again.",
+                variant: "destructive",
+              });
+            }
+          }
+
+          // Check if we've reached the maximum number of polls
+          if (pollCount >= maxPolls) {
+            console.log('Maximum polling attempts reached');
+            clearInterval(pollInterval);
+            toast({
+              title: "Analysis Not Ready",
+              description: "Your analysis is still being processed. Please check back in a few minutes.",
+              variant: "destructive",
+            });
+          }
+        } catch (error) {
+          console.error('Error polling for results:', error);
+        }
+      }, 2000); // Poll every 2 seconds
+
+    } catch (error) {
+      console.error('Error submitting form:', error);
+      toast({
+        title: "Error",
+        description: "Failed to analyze resume. Please try again.",
+        variant: "destructive",
+      });
+    }
   };
 
   const handleDownloadPDF = () => {
@@ -169,9 +312,6 @@ ${formData.name}`,
     setResults(null);
   };
 
-  const showData = () => {
-  };
-
   return (
     <div className="min-h-screen">
       <Navigation />
@@ -183,7 +323,6 @@ ${formData.name}`,
         handleInputChange={handleInputChange}
         handleFileChange={handleFileChange}
         handleSubmit={handleSubmit}
-        showData={showData}
       />
 
       <FeaturesSection />

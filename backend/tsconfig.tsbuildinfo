@@ -1,1 +1,1 @@
-{"root":["./src/server.ts","./src/db/db.ts","./src/model/user.model.ts","./src/routes/adddemo.route.ts"],"version":"5.6.3"}
+{"root":["./src/server.ts","./src/db/db.ts","./src/model/user.model.ts","./src/routes/adddemo.route.ts","./src/routes/pdf.route.ts","./src/types/html-pdf-node.d.ts"],"version":"5.6.3"}

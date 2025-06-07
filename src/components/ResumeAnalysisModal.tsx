@@ -34,39 +34,8 @@ const ResumeAnalysisModal: React.FC<ResumeAnalysisModalProps> = ({
       return;
     }
 
-    try {
-      const formDataToSend = new FormData();
-      formDataToSend.append('name', formData.name);
-      formDataToSend.append('email', formData.email);
-      formDataToSend.append('resume', formData.resume);
-      formDataToSend.append('jobDescription', formData.jobDescription);
-      formDataToSend.append('desiredJobTitle', formData.desiredJobTitle);
-      formDataToSend.append('companyName', formData.companyName);
-
-      const response = await fetch("https://n8n.srv747470.hstgr.cloud/webhook-test/Submit-form", {
-        method: "POST",
-        body: formDataToSend
-      });
-
-      if (!response.ok) {
-        throw new Error('Failed to submit form');
-      }
-
-      toast({
-        title: "Success! 🎉",
-        description: "Your resume has been submitted for analysis.",
-      });
-
-      // Call the parent's handleSubmit after successful webhook submission
-      handleSubmit(e);
-    } catch (error) {
-      console.error('Error submitting form:', error);
-      toast({
-        title: "Error",
-        description: "Failed to submit form. Please try again.",
-        variant: "destructive"
-      });
-    }
+    // Call the parent's handleSubmit directly
+    handleSubmit(e);
   };
 
   return (

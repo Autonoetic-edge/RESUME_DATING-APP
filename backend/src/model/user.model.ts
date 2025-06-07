@@ -26,24 +26,18 @@ const userSchema = new mongoose.Schema({
     email: {
         type: String,
         required: true,
-        unique: true
     },
     score: {
         type: Number,
         required: true
     },
     breakdown: {
-        keywordMatch: Number,
-        semanticRelevance: Number,
-        formattingStructure: Number,
-        grammarReadability: Number,
-        quantifiedImpact: Number,
-        customizationTailoring: Number,
-        atsCompliance: Number
+        type: Object,
+        required: true
     },
-    missingSkills:{
-         type:String,
-        required:true
+    missingSkills: {
+        type: [String],
+        required: true
     },
     date: {
         type: Date,
@@ -67,14 +61,38 @@ const userSchema = new mongoose.Schema({
         required: true
     },
     mentorship: {
-         type: String,
+        type: String,
         required: true
     },
     coverLetter: {
-        type: String
+        type: String,
+        required: true
+    },
+    createdAt: {
+        type: Date,
+        default: Date.now
+    },
+    updatedAt: {
+        type: Date,
+        default: Date.now
     }
 }, {
-    timestamps: true
+    timestamps: true,
+    toJSON: {
+        transform: function(doc, ret) {
+            ret.createdAt = ret.createdAt ? new Date(ret.createdAt).toISOString() : null;
+            ret.updatedAt = ret.updatedAt ? new Date(ret.updatedAt).toISOString() : null;
+            ret.date = ret.date ? new Date(ret.date).toISOString() : null;
+            return ret;
+        }
+    }
 });
 
-export default mongoose.model("User", userSchema);
+userSchema.pre('save', function(next) {
+    this.updatedAt = new Date();
+    next();
+});
+
+const userModel = mongoose.model("User", userSchema);
+
+export default userModel;

@@ -1,4 +1,3 @@
-
 import React from 'react';
 import { Heart } from 'lucide-react';
 
@@ -21,7 +20,6 @@ const Footer = () => {
             <h4 className="font-semibold text-white-safe mb-4">Product</h4>
             <ul className="space-y-2 text-gray-safe">
               <li><a href="#" className="hover:text-gradient transition-colors">Features</a></li>
-              <li><a href="#" className="hover:text-gradient transition-colors">Pricing</a></li>
               <li><a href="#" className="hover:text-gradient transition-colors">API</a></li>
             </ul>
           </div>
@@ -36,7 +34,7 @@ const Footer = () => {
           </div>
         </div>
         
-        <div className="border-t border-white/10 mt-8 pt-8 text-center text-gray-safe">
+        <div className="mt-8 pt-8 border-t border-white/10 text-center text-gray-safe">
           <p>© 2024 ResumeSync. Made with care for job seekers everywhere.</p>
         </div>
       </div>

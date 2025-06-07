@@ -1,4 +1,3 @@
-
 import React from 'react';
 import { Heart } from 'lucide-react';
 
@@ -14,7 +13,6 @@ const Navigation = () => {
           <div className="hidden md:flex items-center space-x-8">
             <a href="#features" className="text-white-safe hover:text-gradient transition-colors">Features</a>
             <a href="#how-it-works" className="text-white-safe hover:text-gradient transition-colors">How It Works</a>
-            <a href="#pricing" className="text-white-safe hover:text-gradient transition-colors">Pricing</a>
             <a href="#testimonials" className="text-white-safe hover:text-gradient transition-colors">Reviews</a>
           </div>
         </div>
