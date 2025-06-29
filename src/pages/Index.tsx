@@ -184,6 +184,14 @@ ${formData.name}`,
         description: "Your resume is being processed. We'll check for results in 1 minute.",
       });
 
+      // Add another toast after 5 seconds
+      setTimeout(() => {
+        toast({
+          title: "Almost there!",
+          description: "Your results are on their way. Please wait for a few more seconds.",
+        });
+      }, 5000);
+
       // Wait for 1 minute before starting to poll
       await new Promise(resolve => setTimeout(resolve, 60 * 1000));
 
@@ -224,7 +232,7 @@ ${formData.name}`,
                   required: 90
                 })),
                 missingSkills: Array.isArray(data.data.missingSkills) ? data.data.missingSkills : [],
-                suggestedCourses: [], // You might want to add this to your backend
+                suggestedCourses: [], // You might want to add this to your backend?
                 evaluationSummary: data.data.evaluationOfResume ? [data.data.evaluationOfResume] : [],
                 mentorshipRecommendations: data.data.mentorship ? [data.data.mentorship] : [],
                 coverLetter: data.data.coverLetter || '',

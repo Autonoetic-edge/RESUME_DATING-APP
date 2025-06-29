@@ -36,7 +36,7 @@ const userSchema = new mongoose.Schema({
         required: true
     },
     missingSkills: {
-        type: [String],
+        type: Object,
         required: true
     },
     date: {
@@ -57,11 +57,11 @@ const userSchema = new mongoose.Schema({
         required: true
     },
     evaluationOfResume: {
-        type: String,
+        type: Object,
         required: true
     },
     mentorship: {
-        type: String,
+        type: Object,
         required: true
     },
     coverLetter: {

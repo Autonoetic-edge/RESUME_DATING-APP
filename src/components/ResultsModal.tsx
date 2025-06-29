@@ -1,4 +1,3 @@
-
 import React from 'react';
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
@@ -109,26 +108,65 @@ const ResultsModal: React.FC<ResultsModalProps> = ({
               <div>
                 <h3 className="text-2xl md:text-3xl font-bold text-gradient mb-8 text-center">Professional Assessment</h3>
                 <div className="dark-card rounded-2xl p-8 border border-white/10">
-                  <ul className="space-y-4">
+                  <ul className="space-y-6">
                     {results.evaluationSummary.map((point, index) => (
-                      <li key={index} className="flex items-start gap-3">
-                        <CheckCircle className="text-green-400 mt-1 flex-shrink-0" size={20} />
-                        <span className="text-gray-safe">{point}</span>
+                      <li key={index} className="flex items-start gap-4 p-4 rounded-lg bg-black/30 hover:bg-black/40 transition-colors">
+                        <CheckCircle className="text-green-400 mt-1 flex-shrink-0" size={24} />
+                        <span className="text-gray-safe text-lg leading-relaxed">{point}</span>
                       </li>
                     ))}
                   </ul>
                 </div>
               </div>
 
+              {/* Mentorship Recommendations */}
+              <div>
+                <h3 className="text-2xl md:text-3xl font-bold text-gradient mb-8 text-center">Mentorship Opportunities</h3>
+                <div className="dark-card rounded-2xl p-8 border border-white/10">
+                  <div className="grid gap-6">
+                    {results.mentorshipRecommendations.map((recommendation, index) => (
+                      <div 
+                        key={index} 
+                        className="flex items-start gap-4 p-6 rounded-lg bg-black/30 hover:bg-black/40 transition-colors"
+                      >
+                        <div className="flex-shrink-0 w-10 h-10 rounded-full bg-gradient-to-r from-pink-500/20 to-purple-600/20 flex items-center justify-center">
+                          <svg 
+                            className="w-6 h-6 text-gradient" 
+                            fill="none" 
+                            stroke="currentColor" 
+                            viewBox="0 0 24 24"
+                          >
+                            <path 
+                              strokeLinecap="round" 
+                              strokeLinejoin="round" 
+                              strokeWidth={2} 
+                              d="M17 20h5v-2a3 3 0 00-5.356-1.857M17 20H7m10 0v-2c0-.656-.126-1.283-.356-1.857M7 20H2v-2a3 3 0 015.356-1.857M7 20v-2c0-.656.126-1.283.356-1.857m0 0a5.002 5.002 0 019.288 0M15 7a3 3 0 11-6 0 3 3 0 016 0zm6 3a2 2 0 11-4 0 2 2 0 014 0zM7 10a2 2 0 11-4 0 2 2 0 014 0z" 
+                            />
+                          </svg>
+                        </div>
+                        <div className="flex-1">
+                          <p className="text-gray-safe text-lg leading-relaxed">{recommendation}</p>
+                        </div>
+                      </div>
+                    ))}
+                  </div>
+                </div>
+              </div>
+
               {/* Cover Letter */}
               <div>
                 <h3 className="text-2xl md:text-3xl font-bold text-gradient mb-8 text-center">Personalized Cover Letter</h3>
-                <Textarea
-                  value={results.coverLetter}
-                  readOnly
-                  rows={12}
-                  className="w-full rounded-xl border-white/20 bg-black/50 text-white-safe resize-none"
-                />
+                <div className="dark-card rounded-2xl p-8 border border-white/10">
+                  <div className="prose prose-invert max-w-none">
+                    <div className="whitespace-pre-wrap text-gray-safe text-lg leading-relaxed">
+                      {results.coverLetter.split('\n').map((paragraph, index) => (
+                        <p key={index} className="mb-4 last:mb-0">
+                          {paragraph}
+                        </p>
+                      ))}
+                    </div>
+                  </div>
+                </div>
               </div>
 
               {/* Download Button */}
