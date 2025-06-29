@@ -136,36 +136,31 @@ const Index = () => {
         throw new Error("Failed to submit form to n8n workflow");
       }
 
-      console.log(
-        "Webhook call successful, waiting 1 minute before starting to poll..."
-      );
+      console.log("Webhook call successful, showing success toast...");
 
-      // Show waiting toast
+      // Show success toast immediately after webhook success
       toast({
-        title: "Processing...",
-        description:
-          "Your resume is being processed. We'll check for results in 1 minute.",
+        title: "Success! 🎉",
+        description: "Your resume has been submitted successfully. Your results will be ready in 1 minute.",
       });
 
-      // Add another toast after 5 seconds
-      setTimeout(() => {
-        toast({
-          title: "Almost there!",
-          description: "Your results are on their way. Please wait for a few more seconds.",
-        });
-      }, 5000);
-
-      // Wait for 1 minute before starting to poll
-      await new Promise((resolve) => setTimeout(resolve, 60 * 1000));
-
-      console.log("Starting to poll for results...");
+      // Start polling immediately without waiting
+      console.log("Starting to poll for results immediately...");
       toast({
-        title: "Checking Results...",
-        description: "Checking for your analysis results...",
+        title: "Processing...",
+        description: "Your resume is being processed. We'll check for results shortly.",
       });
 
       let pollCount = 0;
-      const maxPolls = 5; // Maximum 5 polling attempts
+      const maxPolls = 30; // Increased polling attempts since we're not waiting
+
+      // Add progress toast every 10 seconds
+      let progressToastInterval = setInterval(() => {
+        toast({
+          title: "Still Processing...",
+          description: "Your analysis is still in progress. Please wait a bit longer.",
+        });
+      }, 10000);
 
       // Poll for results every 2 seconds
       const pollInterval = setInterval(async () => {
@@ -186,6 +181,7 @@ const Index = () => {
               console.log("Analysis results found!");
               // Clear polling interval
               clearInterval(pollInterval);
+              clearInterval(progressToastInterval);
 
               // Transform the data to match our Results interface
               const analysisResults: Results = {
@@ -196,10 +192,26 @@ const Index = () => {
                   current: typeof value === 'number' ? value : 0,
                   required: 90
                 })),
-                missingSkills: Array.isArray(data.data.missingSkills) ? data.data.missingSkills : [],
+                missingSkills: Array.isArray(data.data.missingSkills) 
+                  ? data.data.missingSkills 
+                  : typeof data.data.missingSkills === 'object' 
+                    ? Object.keys(data.data.missingSkills || {})
+                    : [],
                 suggestedCourses: [], // You might want to add this to your backend
-                evaluationSummary: data.data.evaluationOfResume ? [data.data.evaluationOfResume] : [],
-                mentorshipRecommendations: data.data.mentorship ? [data.data.mentorship] : [],
+                evaluationSummary: Array.isArray(data.data.evaluationOfResume) 
+                  ? data.data.evaluationOfResume 
+                  : typeof data.data.evaluationOfResume === 'string'
+                    ? [data.data.evaluationOfResume]
+                    : typeof data.data.evaluationOfResume === 'object'
+                      ? Object.values(data.data.evaluationOfResume || {}).filter(val => typeof val === 'string')
+                      : [],
+                mentorshipRecommendations: Array.isArray(data.data.mentorship) 
+                  ? data.data.mentorship 
+                  : typeof data.data.mentorship === 'string'
+                    ? [data.data.mentorship]
+                    : typeof data.data.mentorship === 'object'
+                      ? Object.values(data.data.mentorship || {}).filter(val => typeof val === 'string')
+                      : [],
                 coverLetter: data.data.coverLetter || '',
                 reportDate: new Date().toLocaleDateString("en-US", {
                   year: "numeric",
@@ -237,6 +249,7 @@ const Index = () => {
               // For other errors, we might want to stop polling
               console.error("Unexpected error from API, stopping polling");
               clearInterval(pollInterval);
+              clearInterval(progressToastInterval);
               toast({
                 title: "Error",
                 description:
@@ -250,6 +263,7 @@ const Index = () => {
           if (pollCount >= maxPolls) {
             console.log("Maximum polling attempts reached");
             clearInterval(pollInterval);
+            clearInterval(progressToastInterval);
             toast({
               title: "Analysis Not Ready",
               description:

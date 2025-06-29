@@ -69,18 +69,26 @@ const ResultsModal: React.FC<ResultsModalProps> = ({
               {/* Skill Breakdown */}
               <div>
                 <h3 className="text-2xl md:text-3xl font-bold text-gradient mb-8 text-center">Skill Analysis</h3>
-                <SkillChart data={results.skillBreakdown} />
+                {Array.isArray(results.skillBreakdown) && results.skillBreakdown.length > 0 ? (
+                  <SkillChart data={results.skillBreakdown} />
+                ) : (
+                  <p className="text-gray-safe text-center">No skill breakdown available.</p>
+                )}
               </div>
 
               {/* Missing Skills */}
               <div>
                 <h3 className="text-2xl md:text-3xl font-bold text-gradient mb-8 text-center">Skills to Develop</h3>
                 <div className="flex flex-wrap gap-3 justify-center">
-                  {results.missingSkills.map((skill, index) => (
-                    <Badge key={index} variant="outline" className="text-base py-2 px-4 border-pink-500/30 text-gradient rounded-full bg-black/30">
-                      {skill}
-                    </Badge>
-                  ))}
+                  {Array.isArray(results.missingSkills) && results.missingSkills.length > 0 ? (
+                    results.missingSkills.map((skill, index) => (
+                      <Badge key={index} variant="outline" className="text-base py-2 px-4 border-pink-500/30 text-gradient rounded-full bg-black/30">
+                        {typeof skill === 'string' ? skill : String(skill)}
+                      </Badge>
+                    ))
+                  ) : (
+                    <p className="text-gray-safe">No missing skills identified.</p>
+                  )}
                 </div>
               </div>
 
@@ -88,19 +96,23 @@ const ResultsModal: React.FC<ResultsModalProps> = ({
               <div>
                 <h3 className="text-2xl md:text-3xl font-bold text-gradient mb-8 text-center">Recommended Courses</h3>
                 <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
-                  {results.suggestedCourses.map((course, index) => (
-                    <Card key={index} className="dark-card border-white/10 hover:shadow-lg transition-shadow">
-                      <CardContent className="p-6">
-                        <div className="flex items-center gap-3">
-                          <BookOpen className="text-gradient" size={24} />
-                          <div>
-                            <h4 className="font-semibold text-white-safe">{course.name}</h4>
-                            <p className="text-sm text-gray-safe">{course.platform}</p>
+                  {Array.isArray(results.suggestedCourses) && results.suggestedCourses.length > 0 ? (
+                    results.suggestedCourses.map((course, index) => (
+                      <Card key={index} className="dark-card border-white/10 hover:shadow-lg transition-shadow">
+                        <CardContent className="p-6">
+                          <div className="flex items-center gap-3">
+                            <BookOpen className="text-gradient" size={24} />
+                            <div>
+                              <h4 className="font-semibold text-white-safe">{course.name}</h4>
+                              <p className="text-sm text-gray-safe">{course.platform}</p>
+                            </div>
                           </div>
-                        </div>
-                      </CardContent>
-                    </Card>
-                  ))}
+                        </CardContent>
+                      </Card>
+                    ))
+                  ) : (
+                    <p className="text-gray-safe text-center col-span-2">No courses recommended at this time.</p>
+                  )}
                 </div>
               </div>
 
@@ -108,14 +120,18 @@ const ResultsModal: React.FC<ResultsModalProps> = ({
               <div>
                 <h3 className="text-2xl md:text-3xl font-bold text-gradient mb-8 text-center">Professional Assessment</h3>
                 <div className="dark-card rounded-2xl p-8 border border-white/10">
-                  <ul className="space-y-6">
-                    {results.evaluationSummary.map((point, index) => (
-                      <li key={index} className="flex items-start gap-4 p-4 rounded-lg bg-black/30 hover:bg-black/40 transition-colors">
-                        <CheckCircle className="text-green-400 mt-1 flex-shrink-0" size={24} />
-                        <span className="text-gray-safe text-lg leading-relaxed">{point}</span>
-                      </li>
-                    ))}
-                  </ul>
+                  {Array.isArray(results.evaluationSummary) && results.evaluationSummary.length > 0 ? (
+                    <ul className="space-y-6">
+                      {results.evaluationSummary.map((point, index) => (
+                        <li key={index} className="flex items-start gap-4 p-4 rounded-lg bg-black/30 hover:bg-black/40 transition-colors">
+                          <CheckCircle className="text-green-400 mt-1 flex-shrink-0" size={24} />
+                          <span className="text-gray-safe text-lg leading-relaxed">{typeof point === 'string' ? point : String(point)}</span>
+                        </li>
+                      ))}
+                    </ul>
+                  ) : (
+                    <p className="text-gray-safe text-center">No evaluation summary available.</p>
+                  )}
                 </div>
               </div>
 
@@ -123,33 +139,37 @@ const ResultsModal: React.FC<ResultsModalProps> = ({
               <div>
                 <h3 className="text-2xl md:text-3xl font-bold text-gradient mb-8 text-center">Mentorship Opportunities</h3>
                 <div className="dark-card rounded-2xl p-8 border border-white/10">
-                  <div className="grid gap-6">
-                    {results.mentorshipRecommendations.map((recommendation, index) => (
-                      <div 
-                        key={index} 
-                        className="flex items-start gap-4 p-6 rounded-lg bg-black/30 hover:bg-black/40 transition-colors"
-                      >
-                        <div className="flex-shrink-0 w-10 h-10 rounded-full bg-gradient-to-r from-pink-500/20 to-purple-600/20 flex items-center justify-center">
-                          <svg 
-                            className="w-6 h-6 text-gradient" 
-                            fill="none" 
-                            stroke="currentColor" 
-                            viewBox="0 0 24 24"
-                          >
-                            <path 
-                              strokeLinecap="round" 
-                              strokeLinejoin="round" 
-                              strokeWidth={2} 
-                              d="M17 20h5v-2a3 3 0 00-5.356-1.857M17 20H7m10 0v-2c0-.656-.126-1.283-.356-1.857M7 20H2v-2a3 3 0 015.356-1.857M7 20v-2c0-.656.126-1.283.356-1.857m0 0a5.002 5.002 0 019.288 0M15 7a3 3 0 11-6 0 3 3 0 016 0zm6 3a2 2 0 11-4 0 2 2 0 014 0zM7 10a2 2 0 11-4 0 2 2 0 014 0z" 
-                            />
-                          </svg>
+                  {Array.isArray(results.mentorshipRecommendations) && results.mentorshipRecommendations.length > 0 ? (
+                    <div className="grid gap-6">
+                      {results.mentorshipRecommendations.map((recommendation, index) => (
+                        <div 
+                          key={index} 
+                          className="flex items-start gap-4 p-6 rounded-lg bg-black/30 hover:bg-black/40 transition-colors"
+                        >
+                          <div className="flex-shrink-0 w-10 h-10 rounded-full bg-gradient-to-r from-pink-500/20 to-purple-600/20 flex items-center justify-center">
+                            <svg 
+                              className="w-6 h-6 text-gradient" 
+                              fill="none" 
+                              stroke="currentColor" 
+                              viewBox="0 0 24 24"
+                            >
+                              <path 
+                                strokeLinecap="round" 
+                                strokeLinejoin="round" 
+                                strokeWidth={2} 
+                                d="M17 20h5v-2a3 3 0 00-5.356-1.857M17 20H7m10 0v-2c0-.656-.126-1.283-.356-1.857M7 20H2v-2a3 3 0 015.356-1.857M7 20v-2c0-.656.126-1.283.356-1.857m0 0a5.002 5.002 0 019.288 0M15 7a3 3 0 11-6 0 3 3 0 016 0zm6 3a2 2 0 11-4 0 2 2 0 014 0zM7 10a2 2 0 11-4 0 2 2 0 014 0z" 
+                              />
+                            </svg>
+                          </div>
+                          <div className="flex-1">
+                            <p className="text-gray-safe text-lg leading-relaxed">{typeof recommendation === 'string' ? recommendation : String(recommendation)}</p>
+                          </div>
                         </div>
-                        <div className="flex-1">
-                          <p className="text-gray-safe text-lg leading-relaxed">{recommendation}</p>
-                        </div>
-                      </div>
-                    ))}
-                  </div>
+                      ))}
+                    </div>
+                  ) : (
+                    <p className="text-gray-safe text-center">No mentorship recommendations available.</p>
+                  )}
                 </div>
               </div>
 
@@ -157,15 +177,19 @@ const ResultsModal: React.FC<ResultsModalProps> = ({
               <div>
                 <h3 className="text-2xl md:text-3xl font-bold text-gradient mb-8 text-center">Personalized Cover Letter</h3>
                 <div className="dark-card rounded-2xl p-8 border border-white/10">
-                  <div className="prose prose-invert max-w-none">
-                    <div className="whitespace-pre-wrap text-gray-safe text-lg leading-relaxed">
-                      {results.coverLetter.split('\n').map((paragraph, index) => (
-                        <p key={index} className="mb-4 last:mb-0">
-                          {paragraph}
-                        </p>
-                      ))}
+                  {results.coverLetter ? (
+                    <div className="prose prose-invert max-w-none">
+                      <div className="whitespace-pre-wrap text-gray-safe text-lg leading-relaxed">
+                        {results.coverLetter.split('\n').map((paragraph, index) => (
+                          <p key={index} className="mb-4 last:mb-0">
+                            {paragraph}
+                          </p>
+                        ))}
+                      </div>
                     </div>
-                  </div>
+                  ) : (
+                    <p className="text-gray-safe text-center">No cover letter available.</p>
+                  )}
                 </div>
               </div>
 
