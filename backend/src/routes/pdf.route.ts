@@ -52,7 +52,7 @@ router.get('/generate-pdf/:email', async (req: Request<EmailParams>, res: Respon
                     <div class="section">
                         <h2>Missing Skills</h2>
                         <ul>
-                            ${user.missingSkills.map(skill => 
+                            ${user.missingSkills.map((skill: string) => 
                                 `<li class="skill">${skill}</li>`
                             ).join('')}
                         </ul>
